@@ -23,10 +23,29 @@
             <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
         </console>
 
+
+        <Console name="consolePrint" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
+        </Console>
+
         <!--文件会打印出所有信息-->
         <File name="Filelog" fileName="${FILE_PATH}\log4j2\log4j2.log" append="true">
             <PatternLayout pattern="${LOG_PATTERN}"/>
         </File>
+
+        <!-- 这个会打印出所有的debug及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="RollingFileDebug" fileName="${FILE_PATH}\debug\debug.log" filePattern="${FILE_PATH}/${FILE_NAME}-INFO-%d{yyyy-MM-dd}_%i.log.gz">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <!--interval属性用来指定多久滚动一次，默认是1 hour-->
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy同一文件夹下15个文件开始覆盖-->
+            <DefaultRolloverStrategy max="15"/>
+        </RollingFile>
 
         <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
         <RollingFile name="RollingFileInfo" fileName="${FILE_PATH}\info\info.log" filePattern="${FILE_PATH}/${FILE_NAME}-INFO-%d{yyyy-MM-dd}_%i.log.gz">
@@ -75,17 +94,17 @@
     <!--然后定义loggers，只有定义了logger并引入的appender，appender才会生效-->
     <loggers>
         <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
-        <logger name="org.mybatis" level="info" additivity="false">
-            <AppenderRef ref="Console"/>
-        </logger>
+        <!-- 将业务dao接口填写进去,并用控制台输出即可 -->
         <!--监控系统信息-->
         <!--若是additivity设为false，则 子Logger 只会在自己的appender里输出，而不会在 父Logger 的appender里输出。-->
         <Logger name="org.springframework" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <root level="info">
+        <root level="debug">
             <appender-ref ref="Console"/>
             <appender-ref ref="Filelog"/>
+            <appender-ref ref="consolePrint"/>
+            <appender-ref ref="RollingFileDebug"/>
             <appender-ref ref="RollingFileInfo"/>
             <appender-ref ref="RollingFileWarn"/>
             <appender-ref ref="RollingFileError"/>
