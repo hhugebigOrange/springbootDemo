@@ -10,4 +10,8 @@
         select * from test
     </select>
 
+    <select id="getTestCount" resultType="java.lang.Integer">
+        select count(*) from test
+    </select>
+
 </mapper>

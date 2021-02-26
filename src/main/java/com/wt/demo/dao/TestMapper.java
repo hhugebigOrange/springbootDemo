@@ -12,4 +12,6 @@ public interface TestMapper {
 
     List<Test> getTest();
 
+    int getTestCount();
+
 }

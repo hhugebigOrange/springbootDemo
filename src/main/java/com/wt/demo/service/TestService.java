@@ -1,12 +1,12 @@
 package com.wt.demo.service;
 
-import com.wt.demo.entity.Test;
+import com.wt.demo.req.extend.TestReq;
+import com.wt.demo.resp.extend.TestResp;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 public interface TestService {
 
-    List<Test> getTest();
+    TestResp getTest(TestReq testReq);
 
 }
