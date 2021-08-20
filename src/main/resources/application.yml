@@ -9,3 +9,5 @@ mybatis:
   type-aliases-package: com.wt.demo.entity
 swagger:
   enable: true
+server:
+  port: 8099

@@ -2,12 +2,12 @@ package com.wt.demo.dao;
 
 import com.wt.demo.entity.Test;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Mapper
-@Component
+@Repository
 public interface TestMapper {
 
     List<Test> getTest();
